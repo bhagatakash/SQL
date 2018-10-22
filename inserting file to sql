@@ -1,0 +1,19 @@
+import sqlalchemy
+import pyodbc
+import pandas
+import requests
+
+engine = sqlalchemy.create_engine('mssql+pyodbc://sa:miswak365@Akash')
+
+conn = engine.connect()
+
+url = 'https://www.iiipicai.in/index.php?option=com_content&view=article&id=163&Itemid=0'
+
+r = requests.get(url)
+
+df2 = pandas.read_html(r.text)
+x=df2[1]
+
+df = pandas.read_sql_query("select * from RSL",con=engine)
+
+x.to_sql(name="test_tables_2",con=engine,index=False,if_exists='append')
